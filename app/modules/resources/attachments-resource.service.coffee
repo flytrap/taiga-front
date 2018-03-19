@@ -29,10 +29,11 @@ sizeFormat = @.taiga.sizeFormat
 Resource = (urlsService, http, config, $rootScope, $q, storage) ->
     service = {}
 
-    service.list = (type, objectId, projectId) ->
+    service.list = (type, objectId, projectId, from_comment) ->
         urlname = "attachments/#{type}"
-
-        params = {object_id: objectId, project: projectId}
+        if from_comment == undefined
+            from_comment = false
+        params = {object_id: objectId, project: projectId, from_comment: from_comment}
         httpOptions = {
             headers: {
                 "x-disable-pagination": "1"

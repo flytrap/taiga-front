@@ -54,6 +54,9 @@ class AttachmentsService
         return @config.get("maxUploadFileSize", null)
 
     list: (type, objId, projectId) ->
+        this.objId = objId
+        this.projectId = projectId
+        this.ftype = type
         return @rs.attachments.list(type, objId, projectId).then (attachments) =>
             return attachments.sortBy (attachment) => attachment.get('order')
 
@@ -71,6 +74,7 @@ class AttachmentsService
         @confirm.notify("error", message)
 
     upload: (file, objId, projectId, type, from_comment = false) ->
+        console.log(objId, projectId, type)
         promise = @rs.attachments.create(type, projectId, objId, file, from_comment)
 
         promise.then null, @.saveError.bind(this, file)

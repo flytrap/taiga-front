@@ -24,8 +24,10 @@
 
 taiga = @.taiga
 bindOnce = @.taiga.bindOnce
+#tgAttachmentsService = @.taiga
 
-Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoader, wysiwygCodeHightlighterService, wysiwygMentionService, analytics, $location) ->
+
+Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoader, wysiwygCodeHightlighterService, wysiwygMentionService, analytics, $location, attachmentsService, $q) ->
     removeSelections = () ->
         if window.getSelection
             if window.getSelection().empty
@@ -87,7 +89,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
         preList = mediumInstance.elements[0].querySelectorAll('pre')
 
         for pre in preList
-            # prevent edit a pre
+# prevent edit a pre
             pre.setAttribute('contenteditable', false)
 
             pre.setAttribute('title', $translate.instant("COMMON.WYSIWYG.DB_CLICK"))
@@ -98,8 +100,9 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
             if pre.nextElementSibling && pre.nextElementSibling.nodeName.toLowerCase() == 'p' && !pre.nextElementSibling.children.length
                 pre.nextElementSibling.appendChild(document.createElement('br'))
 
-            # add p after every pre
-            else if !pre.nextElementSibling || ['p', 'ul', 'h1', 'h2', 'h3'].indexOf(pre.nextElementSibling.nodeName.toLowerCase()) == -1
+# add p after every pre
+            else if !pre.nextElementSibling || ['p', 'ul', 'h1', 'h2',
+                'h3'].indexOf(pre.nextElementSibling.nodeName.toLowerCase()) == -1
                 p = document.createElement('p')
                 p.appendChild(document.createElement('br'))
 
@@ -169,9 +172,30 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
 
     CustomPasteHandler = MediumEditor.extensions.paste.extend({
         doPaste: (pastedHTML, pastedPlain, editable) ->
-            html = MediumEditor.util.htmlEntities(pastedPlain);
+            attachmentsService.replaceing = false
+            if event.clipboardData.files.length > 0
+                for file in event.clipboardData.files
+                    do(file) ->
+                        if file.type.includes('image')
+                            reader = new FileReader()
+                            reader.onload = () =>
+                                html = "<img id='replace-image-data' src='" + reader.result.toString() + "' /><br/>"
+                                MediumEditor.util.insertHTMLCommand(this.document, html);
+                                attachmentsService.replaceing = true
+                            reader.readAsDataURL(file)
+                            console.log(reader.result)
+                            promises = attachmentsService.upload(file, attachmentsService.objId, attachmentsService.projectId, attachmentsService.ftype, true)
+                            promises.then((data) =>
+                                img = this.document.getElementById('replace-image-data')
+                                img.src = data.get('preview_url')
+                                img.id = ''
+                                attachmentsService.replaceing = false
+                                console.log('replace ok');
+                            )
 
-            MediumEditor.util.insertHTMLCommand(this.document, html);
+            if pastedPlain != undefined
+                html = MediumEditor.util.htmlEntities(pastedPlain);
+                MediumEditor.util.insertHTMLCommand(this.document, html);
     })
 
     # bug
@@ -230,10 +254,10 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
             codePre = codeBlockSelected.parentNode
 
             if lan == 'remove-formating'
-                    codeBlockSelected.className = ''
-                    codePre.className = ''
+                codeBlockSelected.className = ''
+                codePre.className = ''
 
-                    removeCodeBlockAndHightlight(codeBlockSelected, mediumInstance)
+                removeCodeBlockAndHightlight(codeBlockSelected, mediumInstance)
             else if _.trim(code).length
                 if lan
                     codeBlockSelected.className = 'language-' + lan
@@ -253,6 +277,8 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
             return null
 
         $scope.setMode = (mode) ->
+            if attachmentsService.replaceing
+                return
             $storage.set('editor-mode', mode)
 
             if mode == 'markdown'
@@ -264,6 +290,8 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
             mediumInstance.trigger('editableBlur', {}, editorMedium[0])
 
         $scope.save = (e) ->
+            if attachmentsService.replaceing
+                return
             e.preventDefault() if e
 
             if $scope.mode == 'html'
@@ -273,7 +301,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
 
             return if $scope.required && !$scope.markdown.length
 
-            $scope.saving  = true
+            $scope.saving = true
             $scope.outdated = false
 
             $scope.onSave({text: $scope.markdown, cb: saveEnd})
@@ -307,7 +335,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
             editorMedium.html('')
 
         saveEnd = () ->
-            $scope.saving  = false
+            $scope.saving = false
 
             if !isEditOnly
                 setEditMode(false)
@@ -398,7 +426,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
 
         throttleChange = _.throttle(change, 200)
 
-        create = (text, editMode=false) ->
+        create = (text, editMode = false) ->
             if text.length
                 html = wysiwygService.getHTML(text)
                 editorMedium.html(html)
@@ -469,7 +497,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
                     ]
                 },
                 extensions: {
-                    paste: new CustomPasteHandler(),
+                    paste: new CustomPasteHandler(this),
                     code: new CodeButton(),
                     autolist: new AutoList(),
                     alignright: new AlignRightButton(),
@@ -488,11 +516,11 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
             mediumInstance.subscribe "editableClick", (e) ->
                 r = new RegExp('^(?:[a-z]+:)?//', 'i')
 
-                if e.target.href 
+                if e.target.href
                     if r.test(e.target.getAttribute('href')) || e.target.getAttribute('target') == '_blank'
                         e.stopPropagation()
-                        window.open(e.target.href)                                                 
-                    else 
+                        window.open(e.target.href)
+                    else
                         $location.url(e.target.href)
 
             mediumInstance.subscribe 'editableDrop', (event) ->
@@ -521,7 +549,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
                 wysiwygCodeHightlighterService.addHightlighter(mediumInstance.elements[0])
                 refreshCodeBlocks(mediumInstance)
 
-        $(editorMedium[0]).on 'mousedown', (e) -> 
+        $(editorMedium[0]).on 'mousedown', (e) ->
             if e.target.href
                 e.preventDefault()
                 e.stopPropagation()
@@ -529,7 +557,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
                 $scope.$applyAsync () ->
                     if !$scope.editMode
                         setEditMode(true)
-                        refreshCodeBlocks(mediumInstance)                   
+                        refreshCodeBlocks(mediumInstance)
 
         $(editorMedium[0]).on 'dblclick', 'pre', (e) ->
             $scope.$applyAsync () ->
@@ -597,5 +625,7 @@ angular.module("taigaComponents").directive("tgWysiwyg", [
     "tgWysiwygMentionService",
     "$tgAnalytics",
     "$location",
+    "tgAttachmentsService",
+    "$q",
     Medium
 ])
