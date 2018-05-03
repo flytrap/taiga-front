@@ -67,3 +67,16 @@ ProfileWatchedDirective = () ->
     })
 
 angular.module("taigaProfile").directive("tgProfileWatched", ProfileWatchedDirective)
+
+
+
+####################################################
+## Ready
+####################################################
+
+ProfileReadyDirective = () ->
+    return _.extend({}, base, {
+        controller: "ProfileReady"
+    })
+
+angular.module("taigaProfile").directive("tgProfileReady", ProfileReadyDirective)

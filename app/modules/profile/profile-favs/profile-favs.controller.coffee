@@ -196,3 +196,23 @@ class ProfileWatchedController extends FavsBaseController
 
 angular.module("taigaProfile")
     .controller("ProfileWatched", ProfileWatchedController)
+
+
+
+####################################################
+## me
+####################################################
+
+class ProfileReadyController extends FavsBaseController
+    @.$inject = [
+        "tgUserService",
+    ]
+
+    constructor: (@userService) ->
+        super()
+        @.tabName = 'MySelf'
+        @._getItems = @userService.getMySelf
+
+
+angular.module("taigaProfile")
+    .controller("ProfileReady", ProfileReadyController)

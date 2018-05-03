@@ -772,7 +772,9 @@
                 "WATCHED_TAB": "Watched",
                 "WATCHED_TAB_TITLE": "List all item watched by this user",
                 "CONTACTS_TAB": "Contacts",
-                "CONTACTS_TAB_TITLE": "List all contacts made by this user"
+                "CONTACTS_TAB_TITLE": "List all contacts made by this user",
+                "READY_TAB": "MySelf",
+                "READY_TAB_TITLE": "List all ready usersotry by this user"
             }
         },
         "PROFILE_SIDEBAR": {
