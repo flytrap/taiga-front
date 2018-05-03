@@ -42,6 +42,9 @@ class UserService extends taiga.Service
     getWatched: (userId, pageNumber, objectType, textQuery) ->
         return @rs.users.getWatched(userId, pageNumber, objectType, textQuery)
 
+    getMySelf: (userId, pageNumber, type, q) ->
+        return @rs.users.getMySelf(userId, pageNumber, type, q)
+
     getStats: (userId) ->
         return @rs.users.getStats(userId)
 

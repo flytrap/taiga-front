@@ -140,9 +140,8 @@ RelatedTaskCreateFormDirective = ($repo, $compile, $confirm, $tgmodel, $loading,
             $scope.newTask.status = $scope.project.default_task_status
             $scope.newTask.assigned_to = null
 
-            prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
-            task.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
-            task.estimated_end = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
+            task.estimated_start = moment($('.date-start').val()).format("YYYY-MM-DD HH:mm:ss")
+            task.estimated_end = moment($('.date-start').val()).format("YYYY-MM-DD HH:mm:ss")
 
             currentLoading = $loading()
                 .target($el.find('.task-name'))

@@ -77,8 +77,7 @@ paths.css_vendor = [
     paths.modules + "medium-editor/dist/css/themes/default.css",
     paths.modules + "prismjs/themes/prism-okaidia.css",
     paths.modules + "bootstrap/dist/css/bootstrap.min.css",
-    paths.modules + "angularjs-bootstrap-datetimepicker/src/css/datetimepicker.css",
-    paths.modules + "angularjs-bootstrap-datetimepicker/src/css/datetimepicker.css.map"
+    paths.modules + "angularjs-bootstrap-datetimepicker/src/css/datetimepicker.css"
 ];
 paths.locales = paths.app + "locales/**/*.json";
 paths.modulesLocales = paths.app + "modules/**/locales/*.json";
@@ -171,7 +170,6 @@ paths.libs = [
     paths.modules + "angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js",
     paths.modules + "moment/moment.js",
     paths.modules + "checksley/checksley.js",
-    // paths.modules + "angular-moment-picker/dist/angular-moment-picker.js",
     paths.modules + "bootstrap/dist/js/bootstrap.min.js",
     paths.modules + "angularjs-bootstrap-datetimepicker/src/js/datetimepicker.js",
     paths.modules + "angularjs-bootstrap-datetimepicker/src/js/datetimepicker.templates.js",
@@ -757,7 +755,6 @@ gulp.task("default", function(cb) {
         "copy",
         "styles",
         "app-watch",
-        // "jslibs-deploy",
         "jslibs-watch",
         "jade-deploy",
         "express",

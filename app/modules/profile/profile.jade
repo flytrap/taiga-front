@@ -49,4 +49,11 @@ div.profile.centered(ng-if="vm.user")
             )
                 div(tg-profile-contacts, user="vm.user")
 
+            div(
+                tg-profile-tab="{{'USER.PROFILE.TABS.READY_TAB' | translate}}"
+                tab-title="{{'USER.PROFILE.TABS.READY_TAB_TITLE' | translate}}"
+                tab-icon="icon-project"
+            )
+                div(tg-profile-ready, user="vm.user")
+
         include includes/profile-sidebar
