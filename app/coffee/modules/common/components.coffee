@@ -320,6 +320,15 @@ AssignedToDirective = ($rootscope, $confirm, $repo, $loading, $modelTransform, $
                 .target($el)
                 .start()
 
+            if !item._isModified
+                currentLoading.finish()
+                obj = $scope.usersById[userId]
+                obj.assigned_to_extra_info = obj
+                obj.assigned_to = obj
+                renderAssignedTo(obj)
+                $rootscope.$broadcast("object:updated")
+                return $scope.usersById[userId]
+
             transform = $modelTransform.save (item) ->
                 item.assigned_to = userId
 

@@ -23,6 +23,9 @@ form
             ng-options="s.id as s.name for s in usStatusList"
         )
 
+    //fieldset
+    section.ticket-assigned-to(tg-assigned-to, ng-model="us", required-perm="modify_us")
+
     fieldset
         tg-tag-line-common.tags-block(
             ng-if="project && createEditUsOpen"
