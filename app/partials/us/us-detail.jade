@@ -101,6 +101,26 @@ div.wrapper(
             required-perm="modify_us"
         )
 
+        dates
+            input.date-start(
+                disabled='false'
+                type="text"
+                name="estimated_start"
+                picker-value="{{us.estimated_start}}"
+                data-required="true"
+                tg-date-selector
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
+                )
+            input.date-end(
+                disabled='false'
+                type="text"
+                name="estimated_end"
+                picker-value="{{us.estimated_end}}"
+                data-required="true"
+                tg-date-selector
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+                )
+
         section.ticket-watch-buttons
             div.ticket-watch(
                 tg-watch-button

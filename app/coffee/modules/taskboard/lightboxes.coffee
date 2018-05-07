@@ -163,6 +163,10 @@ CreateEditTaskDirective = ($repo, $model, $rs, $rootscope, $loading, lightboxSer
                 include_tasks: true
             }
 
+            prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
+            $scope.task.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
+            $scope.task.estimated_end = moment($('.date-end').val(), prettyDate).format("YYYY-MM-DD")
+
             if $scope.isNew
                 promise = $repo.create("tasks", $scope.task)
                 broadcastEvent = "taskform:new:success"

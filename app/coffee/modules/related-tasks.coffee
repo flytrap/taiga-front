@@ -35,6 +35,7 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
 
     link = ($scope, $el, $attrs, $model) ->
         @childScope = $scope.$new()
+        prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
 
         saveTask = debounce 2000, (task) ->
             task.subject = $el.find('input').val()
@@ -42,6 +43,9 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
             currentLoading = $loading()
                 .target($el.find('.task-name'))
                 .start()
+
+            task.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
+            task.estimated_end = moment($('.date-end').val(), prettyDate).format("YYYY-MM-DD")
 
             promise = $repo.save(task)
             promise.then =>
@@ -122,7 +126,7 @@ module.directive("tgRelatedTaskRow", ["$tgRepo", "$compile", "$tgConfirm", "$roo
                                       "$tgTemplate", "$translate", RelatedTaskRowDirective])
 
 
-RelatedTaskCreateFormDirective = ($repo, $compile, $confirm, $tgmodel, $loading, $analytics) ->
+RelatedTaskCreateFormDirective = ($repo, $compile, $confirm, $tgmodel, $loading, $translate, $analytics) ->
     newTask = {
         subject: ""
         assigned_to: null
@@ -135,6 +139,10 @@ RelatedTaskCreateFormDirective = ($repo, $compile, $confirm, $tgmodel, $loading,
             task.status = $scope.newTask.status
             $scope.newTask.status = $scope.project.default_task_status
             $scope.newTask.assigned_to = null
+
+            prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
+            task.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
+            task.estimated_end = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
 
             currentLoading = $loading()
                 .target($el.find('.task-name'))
@@ -202,7 +210,7 @@ RelatedTaskCreateFormDirective = ($repo, $compile, $confirm, $tgmodel, $loading,
         templateUrl: 'task/related-task-create-form.html'
     }
 
-module.directive("tgRelatedTaskCreateForm", ["$tgRepo", "$compile", "$tgConfirm", "$tgModel", "$tgLoading",
+module.directive("tgRelatedTaskCreateForm", ["$tgRepo", "$compile", "$tgConfirm", "$tgModel", "$tgLoading", "$translate",
                                              "$tgAnalytics", RelatedTaskCreateFormDirective])
 
 

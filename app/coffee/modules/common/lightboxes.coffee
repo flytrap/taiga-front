@@ -451,6 +451,9 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
                 include_attachments: true,
                 include_tasks: true
             }
+            prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
+            $scope.us.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
+            $scope.us.estimated_end = moment($('.date-end').val(), prettyDate).format("YYYY-MM-DD")
 
             if $scope.isNew
                 promise = $repo.create("userstories", $scope.us)
@@ -460,6 +463,7 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
                 broadcastEvent = "usform:edit:success"
 
             console.log(form)
+
             promise.then (data) ->
                 deleteAttachments(data)
                     .then () => createAttachments(data)

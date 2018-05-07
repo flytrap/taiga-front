@@ -26,6 +26,26 @@ form
     //fieldset
     section.ticket-assigned-to(tg-assigned-to, ng-model="us", required-perm="modify_us")
 
+    fieldset.dates
+        div
+            input.date-start(
+            type="text"
+            name="estimated_start"
+            picker-value="{{us.estimated_start}}"
+            data-required="true"
+            tg-date-selector
+            placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
+            )
+        div
+            input.date-end(
+            type="text"
+            name="estimated_finish"
+            picker-value="{{us.estimated_end}}"
+            data-required="true"
+            tg-date-selector
+            placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+            )
+
     fieldset
         tg-tag-line-common.tags-block(
             ng-if="project && createEditUsOpen"

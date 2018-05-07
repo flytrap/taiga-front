@@ -28,6 +28,25 @@ form
                 value=""
                 translate="LIGHTBOX.CREATE_EDIT_TASK.OPTION_UNASSIGNED"
             )
+    fieldset.dates
+        div
+            input.date-start(
+                type="text"
+                name="estimated_start"
+                picker-value="{{task.estimated_start}}"
+                data-required="true"
+                tg-date-selector
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
+            )
+        div
+            input.date-end(
+                type="text"
+                name="estimated_end"
+                picker-value="{{task.estimated_end}}"
+                data-required="true"
+                tg-date-selector
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+            )
 
     fieldset
         tg-tag-line-common.tags-block(
