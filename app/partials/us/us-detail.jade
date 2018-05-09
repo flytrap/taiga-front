@@ -100,25 +100,36 @@ div.wrapper(
             ng-model="us"
             required-perm="modify_us"
         )
-
-        dates
-            input.date-start(
-                disabled='false'
-                type="text"
-                name="estimated_start"
-                picker-value="{{us.estimated_start}}"
-                data-required="true"
-                tg-date-selector
-                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
+        div.dropdown
+            a.dropdown-toggle(id="dropdownStart" role="button" data-toggle="dropdown" data-target="#" href="#")
+                input.date-start(
+                    type="text"
+                    name="estimated_start"
+                    data-ng-model="us.estimated_start"
+                    data-required="true"
+                    placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
                 )
-            input.date-end(
-                disabled='false'
-                type="text"
-                name="estimated_end"
-                picker-value="{{us.estimated_end}}"
-                data-required="true"
-                tg-date-selector
-                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+            ul.dropdown-menu(role="menu")
+                datetimepicker.dropdown_start(
+                    data-ng-model="us.estimated_start"
+                    data-datetimepicker-config="{ dropdownSelector: '#dropdownStart' }"
+                    data-on-set-time="onTimeSet(ctrl)"
+                )
+
+        div.dropdown
+            a.dropdown-toggle(id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#" href="#")
+                input.date-end(
+                    type="text"
+                    name="estimated_end"
+                    data-ng-model="us.estimated_end"
+                    data-required="true"
+                    placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+                )
+            ul.dropdown-menu(role="menu")
+                datetimepicker.dropdown_end(
+                    data-ng-model="us.estimated_end"
+                    data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd' }"
+                    data-on-set-time="onTimeSet(ctrl)"
                 )
 
         section.ticket-watch-buttons

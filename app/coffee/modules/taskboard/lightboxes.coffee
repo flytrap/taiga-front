@@ -134,6 +134,8 @@ CreateEditTaskDirective = ($repo, $model, $rs, $rootscope, $loading, lightboxSer
             $scope.attachments = Immutable.fromJS(attachments)
 
             resetAttachments()
+            task.estimated_start = moment(task.estimated_start).subtract(8, 'hours').toDate()
+            task.estimated_end = moment(task.estimated_end).subtract(8, 'hours').toDate()
 
             # Update texts for edition
             save = $translate.instant("COMMON.SAVE")
@@ -163,9 +165,8 @@ CreateEditTaskDirective = ($repo, $model, $rs, $rootscope, $loading, lightboxSer
                 include_tasks: true
             }
 
-            prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
-            $scope.task.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
-            $scope.task.estimated_end = moment($('.date-end').val(), prettyDate).format("YYYY-MM-DD")
+            $scope.task.estimated_start = moment($('.date-start').val()).format("YYYY-MM-DD HH:mm:ss")
+            $scope.task.estimated_end = moment($('.date-end').val()).format("YYYY-MM-DD HH:mm:ss")
 
             if $scope.isNew
                 promise = $repo.create("tasks", $scope.task)

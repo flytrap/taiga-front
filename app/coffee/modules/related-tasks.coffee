@@ -35,7 +35,6 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
 
     link = ($scope, $el, $attrs, $model) ->
         @childScope = $scope.$new()
-        prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
 
         saveTask = debounce 2000, (task) ->
             task.subject = $el.find('input').val()
@@ -44,8 +43,8 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
                 .target($el.find('.task-name'))
                 .start()
 
-            task.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
-            task.estimated_end = moment($('.date-end').val(), prettyDate).format("YYYY-MM-DD")
+            task.estimated_start = moment($('.date-start').val()).format("YYYY-MM-DD HH:mm:ss")
+            task.estimated_end = moment($('.date-end').val()).format("YYYY-MM-DD HH:mm:ss")
 
             promise = $repo.save(task)
             promise.then =>
@@ -85,7 +84,8 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
                 modify_task: $scope.project.my_permissions.indexOf("modify_task") != -1
                 delete_task: $scope.project.my_permissions.indexOf("delete_task") != -1
             }
-
+            task.estimated_start = moment(task.estimated_start).subtract(8, 'hours').toDate()
+            task.estimated_end = moment(task.estimated_end).subtract(8, 'hours').toDate()
             $el.html($compile(templateView({task: task, perms: perms}))($scope))
 
             $el.on "click", ".edit-task", ->

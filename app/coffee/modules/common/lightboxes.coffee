@@ -397,6 +397,9 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
 
             resetAttachments()
 
+            us.estimated_start = moment(us.estimated_start).subtract(8, 'hours').toDate()
+            us.estimated_end = moment(us.estimated_end).subtract(8, 'hours').toDate()
+
             # Update texts for edition
             $el.find(".button-green").html($translate.instant("COMMON.SAVE"))
             $el.find(".title").html($translate.instant("LIGHTBOX.CREATE_EDIT_US.EDIT_US"))
@@ -451,9 +454,9 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
                 include_attachments: true,
                 include_tasks: true
             }
-            prettyDate = $translate.instant("COMMON.PICKERDATE.FORMAT")
-            $scope.us.estimated_start = moment($('.date-start').val(), prettyDate).format("YYYY-MM-DD")
-            $scope.us.estimated_end = moment($('.date-end').val(), prettyDate).format("YYYY-MM-DD")
+
+            $scope.us.estimated_start = moment($('.date-start').val()).format("YYYY-MM-DD HH:mm:ss")
+            $scope.us.estimated_end = moment($('.date-end').val()).format("YYYY-MM-DD HH:mm:ss")
 
             if $scope.isNew
                 promise = $repo.create("userstories", $scope.us)
@@ -461,8 +464,6 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
             else
                 promise = $repo.save($scope.us, true)
                 broadcastEvent = "usform:edit:success"
-
-            console.log(form)
 
             promise.then (data) ->
                 deleteAttachments(data)

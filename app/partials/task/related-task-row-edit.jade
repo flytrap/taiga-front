@@ -25,21 +25,32 @@
     figure.avatar
     tg-svg(svg-icon="icon-arrow-down")
 .dates
-    div
-        input.date-start(
-        type="text"
-        name="estimated_start"
-        picker-value="{{task.estimated_start}}"
-        data-required="true"
-        tg-date-selector
-        placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
-        )
-    div
-        input.date-end(
-        type="text"
-        name="estimated_end"
-        picker-value="{{task.estimated_end}}"
-        data-required="true"
-        tg-date-selector
-        placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
-        )
+    div.dropdown
+        a.dropdown-toggle(id="dropdownTaskStart" role="button" data-toggle="dropdown" data-target="#" href="#")
+            input.date-start(
+                type="text"
+                name="estimated_start"
+                data-ng-model="task.estimated_start"
+                data-required="true"
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
+            )
+        ul.dropdown-menu(role="menu")
+            datetimepicker.dropdown_start(
+                data-ng-model="task.estimated_start"
+                data-datetimepicker-config="{ dropdownSelector: '#dropdownTaskStart' }"
+            )
+
+    div.dropdown
+        a.dropdown-toggle(id="dropdownTaskEnd" role="button" data-toggle="dropdown" data-target="#" href="#")
+            input.date-end(
+                type="text"
+                name="estimated_end"
+                data-ng-model="task.estimated_end"
+                data-required="true"
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+            )
+        ul.dropdown-menu(role="menu")
+            datetimepicker.dropdown_end(
+                data-ng-model="task.estimated_end"
+                data-datetimepicker-config="{ dropdownSelector: '#dropdownTaskEnd' }"
+            )

@@ -33,6 +33,10 @@ class StoryHeaderController
         @.loadingSubject = false
         @.originalSubject = @.item.subject
 
+        @rootScope.$on("flytrap:a", (e, d) =>
+            @.saveSubject()
+        )
+
     _checkNav: () ->
         if @.item.neighbors.previous?.ref?
             ctx = {
