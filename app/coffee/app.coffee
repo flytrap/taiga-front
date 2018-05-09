@@ -894,7 +894,8 @@ modules = [
     "ngAria",
     "pascalprecht.translate",
     "infinite-scroll",
-    "tgRepeat"
+    "tgRepeat",
+    "ui.bootstrap.datetimepicker"
 ].concat(pluginsModules)
 
 # Main module definition

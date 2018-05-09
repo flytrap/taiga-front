@@ -75,6 +75,9 @@ class UserStoryDetailController extends mixOf(taiga.Controller, taiga.PageMixin)
             @._setMeta()
             @.initializeOnDeleteGoToUrl()
 
+        @scope.onTimeSet = (vm) ->
+            vm.rootscope.$broadcast("flytrap:a", 1)
+
         # On Error
         promise.then null, @.onInitialDataError.bind(@)
 
@@ -167,7 +170,8 @@ class UserStoryDetailController extends mixOf(taiga.Controller, taiga.PageMixin)
             @scope.us = us
             @scope.usId = us.id
             @scope.commentModel = us
-
+            us.estimated_start = moment(us.estimated_start).subtract(8, 'hours').toDate()
+            us.estimated_end = moment(us.estimated_end).subtract(8, 'hours').toDate()
             @modelTransform.setObject(@scope, 'us')
 
             return us
