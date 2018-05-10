@@ -36,6 +36,9 @@ class StoryHeaderController
         @rootScope.$on("flytrap:a", (e, d) =>
             @.saveSubject()
         )
+        @rootScope.$on("flytrap:task", (e, d) =>
+            @.saveSubject()
+        )
 
     _checkNav: () ->
         if @.item.neighbors.previous?.ref?
@@ -74,6 +77,7 @@ class StoryHeaderController
             @.editSubject(false)
 
     saveSubject: () ->
+
         onEditSubjectSuccess = () =>
             @.loadingSubject = false
             @rootScope.$broadcast("object:updated")
@@ -87,6 +91,10 @@ class StoryHeaderController
         @.editMode = false
         @.loadingSubject = true
         item = @.item
+        if item.estimated_start
+            item.estimated_start = moment(item.estimated_start).format('YYYY-MM-DD HH:mm:ss')
+        if item.estimated_end
+            item.estimated_end = moment(item.estimated_end).format('YYYY-MM-DD HH:mm:ss')
         transform = @modelTransform.save (item) ->
             return item
         return transform.then(onEditSubjectSuccess, onEditSubjectError)

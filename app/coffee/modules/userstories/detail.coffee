@@ -81,6 +81,24 @@ class UserStoryDetailController extends mixOf(taiga.Controller, taiga.PageMixin)
         # On Error
         promise.then null, @.onInitialDataError.bind(@)
 
+        @scope.$watch("us.estimated_start", (n, o) =>
+
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    @scope.us.estimated_start = moment(@scope.us.estimated_start).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    @scope.us.estimated_start = moment(@scope.us.estimated_start).format('YYYY-MM-DD HH:mm:ss')
+        )
+
+        @scope.$watch("us.estimated_end", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    @scope.us.estimated_end = moment(@scope.us.estimated_end).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    @scope.us.estimated_end = moment(@scope.us.estimated_end).format('YYYY-MM-DD HH:mm:ss')
+        )
+
+
     _setMeta: ->
         totalTasks = @scope.tasks.length
         closedTasks = _.filter(@scope.tasks, (t) => @scope.taskStatusById[t.status].is_closed).length
@@ -170,8 +188,7 @@ class UserStoryDetailController extends mixOf(taiga.Controller, taiga.PageMixin)
             @scope.us = us
             @scope.usId = us.id
             @scope.commentModel = us
-            us.estimated_start = moment(us.estimated_start).subtract(8, 'hours').toDate()
-            us.estimated_end = moment(us.estimated_end).subtract(8, 'hours').toDate()
+
             @modelTransform.setObject(@scope, 'us')
 
             return us

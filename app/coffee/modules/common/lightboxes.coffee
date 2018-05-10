@@ -307,6 +307,22 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
         attachmentsToAdd = Immutable.List()
         attachmentsToDelete = Immutable.List()
 
+        $scope.$watch("us.estimated_start", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    $scope.us.estimated_start = moment($scope.us.estimated_start).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    $scope.us.estimated_start = moment($scope.us.estimated_start).format('YYYY-MM-DD HH:mm:ss')
+        )
+
+        $scope.$watch("us.estimated_end", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    $scope.us.estimated_end = moment($scope.us.estimated_end).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    $scope.us.estimated_end = moment($scope.us.estimated_end).format('YYYY-MM-DD HH:mm:ss')
+        )
+
         resetAttachments = () ->
             attachmentsToAdd = Immutable.List()
             attachmentsToDelete = Immutable.List()
@@ -396,9 +412,6 @@ CreateEditUserstoryDirective = ($repo, $model, $rs, $rootScope, lightboxService,
             $scope.isNew = false
 
             resetAttachments()
-
-            us.estimated_start = moment(us.estimated_start).subtract(8, 'hours').toDate()
-            us.estimated_end = moment(us.estimated_end).subtract(8, 'hours').toDate()
 
             # Update texts for edition
             $el.find(".button-green").html($translate.instant("COMMON.SAVE"))

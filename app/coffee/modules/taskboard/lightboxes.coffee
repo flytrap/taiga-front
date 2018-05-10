@@ -34,6 +34,22 @@ CreateEditTaskDirective = ($repo, $model, $rs, $rootscope, $loading, lightboxSer
         attachmentsToAdd = Immutable.List()
         attachmentsToDelete = Immutable.List()
 
+        $scope.$watch("task.estimated_start", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    @scope.task.estimated_start = moment($scope.task.estimated_start).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    @scope.task.estimated_start = moment($scope.task.estimated_start).format('YYYY-MM-DD HH:mm:ss')
+        )
+
+        $scope.$watch("task.estimated_end", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    $scope.task.estimated_end = moment($scope.task.estimated_end).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    $scope.task.estimated_end = moment($scope.task.estimated_end).format('YYYY-MM-DD HH:mm:ss')
+        )
+
         resetAttachments = () ->
             attachmentsToAdd = Immutable.List()
             attachmentsToDelete = Immutable.List()
@@ -134,8 +150,6 @@ CreateEditTaskDirective = ($repo, $model, $rs, $rootscope, $loading, lightboxSer
             $scope.attachments = Immutable.fromJS(attachments)
 
             resetAttachments()
-            task.estimated_start = moment(task.estimated_start).subtract(8, 'hours').toDate()
-            task.estimated_end = moment(task.estimated_end).subtract(8, 'hours').toDate()
 
             # Update texts for edition
             save = $translate.instant("COMMON.SAVE")

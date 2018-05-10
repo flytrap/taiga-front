@@ -69,6 +69,25 @@ class TaskDetailController extends mixOf(taiga.Controller, taiga.PageMixin)
             @._setMeta()
             @.initializeOnDeleteGoToUrl()
 
+        @scope.onTimeSet = (vm) ->
+            vm.rootscope.$broadcast("flytrap:task", 1)
+
+        @scope.$watch("task.estimated_start", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    @scope.task.estimated_start = moment(@scope.task.estimated_start).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    @scope.task.estimated_start = moment(@scope.task.estimated_start).format('YYYY-MM-DD HH:mm:ss')
+        )
+
+        @scope.$watch("task.estimated_end", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    @scope.task.estimated_end = moment(@scope.task.estimated_end).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    @scope.task.estimated_end = moment(@scope.task.estimated_end).format('YYYY-MM-DD HH:mm:ss')
+        )
+
         promise.then null, @.onInitialDataError.bind(@)
 
     _setMeta: ->

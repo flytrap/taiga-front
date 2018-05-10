@@ -36,6 +36,22 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
     link = ($scope, $el, $attrs, $model) ->
         @childScope = $scope.$new()
 
+        $scope.$watch("task.estimated_start", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    $scope.task.estimated_start = moment($scope.task.estimated_start).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    $scope.task.estimated_start = moment($scope.task.estimated_start).format('YYYY-MM-DD HH:mm:ss')
+        )
+
+        $scope.$watch("task.estimated_end", (n, o) =>
+            if n && n.toString().indexOf('T') != -1
+                if n.toString().indexOf('GMT') == -1
+                    $scope.task.estimated_end = moment($scope.task.estimated_end).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss')
+                else
+                    $scope.task.estimated_end = moment($scope.task.estimated_end).format('YYYY-MM-DD HH:mm:ss')
+        )
+
         saveTask = debounce 2000, (task) ->
             task.subject = $el.find('input').val()
 
@@ -84,8 +100,6 @@ RelatedTaskRowDirective = ($repo, $compile, $confirm, $rootscope, $loading, $tem
                 modify_task: $scope.project.my_permissions.indexOf("modify_task") != -1
                 delete_task: $scope.project.my_permissions.indexOf("delete_task") != -1
             }
-            task.estimated_start = moment(task.estimated_start).subtract(8, 'hours').toDate()
-            task.estimated_end = moment(task.estimated_end).subtract(8, 'hours').toDate()
             $el.html($compile(templateView({task: task, perms: perms}))($scope))
 
             $el.on "click", ".edit-task", ->
