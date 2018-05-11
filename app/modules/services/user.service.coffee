@@ -45,6 +45,9 @@ class UserService extends taiga.Service
     getMySelf: (userId, pageNumber, type, q) ->
         return @rs.users.getMySelf(userId, pageNumber, type, q)
 
+    getWeekly: (start, end) ->
+        return @rs.users.getWeekly(start, end)
+
     getStats: (userId) ->
         return @rs.users.getStats(userId)
 

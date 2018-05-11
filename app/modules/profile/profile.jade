@@ -55,5 +55,11 @@ div.profile.centered(ng-if="vm.user")
                 tab-icon="icon-project"
             )
                 div(tg-profile-ready, user="vm.user")
+            div(
+                tg-profile-tab="{{'USER.PROFILE.TABS.WEEKLY_TAB' | translate}}"
+                tab-title="{{'USER.PROFILE.TABS.WEEKLY_TAB_TITLE' | translate}}"
+                tab-icon="icon-project"
+            )
+                div(tg-profile-weekly, user="vm.user")
 
         include includes/profile-sidebar

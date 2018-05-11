@@ -1,0 +1,45 @@
+section.profile-favs
+    div(
+        infinite-scroll="vm.loadData()"
+        infinite-scroll-disabled="vm.scrollDisabled"
+    )
+    fieldset.dates
+        div
+            input.date-start(
+                type="text"
+                name="estimated_start"
+                picker-value="{{vm.data.estimated_start}}"
+                data-required="true"
+                tg-date-selector
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_START' | translate}}"
+            )
+        div
+            input.date-end(
+                type="text"
+                name="estimated_end"
+                picker-value="{{vm.data.estimated_end}}"
+                data-required="true"
+                tg-date-selector
+                placeholder="{{'LIGHTBOX.ADD_EDIT_SPRINT.PLACEHOLDER_SPRINT_END' | translate}}"
+            )
+        button.button-green.submit-button(
+            type="submit"
+            ng-click="vm.loadData()"
+            title="{{'COMMON.SAVE' | translate}}"
+            translate="COMMON.SAVE"
+        )
+        div
+            tg-wysiwyg(
+                editonly
+                not-persist
+                content="description"
+                editor-mode="markdown"
+                n-cancel="cancelCustomRichText()"
+            )
+
+    div(ng-if="vm.isLoading")
+        div.spin
+            img(
+                src="/#{v}/svg/spinner-circle.svg"
+                alt="{{ 'COMMON.LOADING'|translate }}"
+            )

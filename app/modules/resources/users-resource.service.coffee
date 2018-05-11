@@ -134,6 +134,23 @@ Resource = (urlsService, http, paginateResponseService) ->
 
             return paginateResponseService(result)
 
+    service.getWeekly = (start, end) ->
+        url = urlsService.resolve("user-weekly")
+        params = {}
+        if start
+            params.start = start
+        if end
+            params.end = end
+
+        return http.get(url, params, {
+            headers: {
+                'x-lazy-pagination': true
+            }
+        }).then (result) ->
+            result = Immutable.fromJS(result)
+
+            return paginateResponseService(result)
+
     service.getProfileTimeline = (userId, page) ->
         params = {
             page: page

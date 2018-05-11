@@ -774,7 +774,9 @@
                 "CONTACTS_TAB": "联络人",
                 "CONTACTS_TAB_TITLE": "列出这个用户的所有联系人",
                 "READY_TAB": "个人中心",
-                "READY_TAB_TITLE": "列出这个用户的所有待办任务"
+                "READY_TAB_TITLE": "列出这个用户的所有待办任务",
+                "WEEKLY_TAB": "周报",
+                "WEEKLY_TAB_TITLE": "导出周报数据"
             }
         },
         "PROFILE_SIDEBAR": {

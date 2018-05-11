@@ -200,7 +200,7 @@ angular.module("taigaProfile")
 
 
 ####################################################
-## me
+## MySelf
 ####################################################
 
 class ProfileReadyController extends FavsBaseController
@@ -216,3 +216,48 @@ class ProfileReadyController extends FavsBaseController
 
 angular.module("taigaProfile")
     .controller("ProfileReady", ProfileReadyController)
+
+
+
+####################################################
+## Weekly
+####################################################
+
+class ProfileWeeklyController extends FavsBaseController
+    @.$inject = [
+        "tgUserService",
+    ]
+
+    constructor: (@userService) ->
+        @.scrollDisabled = false
+        @.data = {}
+        @.tabName = 'Weekly'
+        @._getData = @userService.getWeekly
+
+        @.data.estimated_start = moment().day(1).format('YYYY-MM-DD')
+        @.data.estimated_end = moment().day(5).format('YYYY-MM-DD')
+
+    loadData:  ->
+        @._enableLoadingSpinner()
+        @._disableScroll()
+
+        if $('.date-start').val()
+            estimated_start = moment($('.date-start').val()).format("YYYY-MM-DD")
+        if $('.date-end').val()
+            estimated_end = moment($('.date-end').val()).format("YYYY-MM-DD")
+
+        @._getData(estimated_start, estimated_end)
+            .then (response) =>
+                @scope.description = response.get("data")
+
+                @._disableScroll()
+                @._disableLoadingSpinner()
+
+                return @.data
+            .catch =>
+                @._disableLoadingSpinner()
+                return @.data
+
+
+angular.module("taigaProfile")
+    .controller("ProfileWeekly", ProfileWeeklyController)

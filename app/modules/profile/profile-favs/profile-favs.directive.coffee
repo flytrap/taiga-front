@@ -71,7 +71,7 @@ angular.module("taigaProfile").directive("tgProfileWatched", ProfileWatchedDirec
 
 
 ####################################################
-## Ready
+## MySelf
 ####################################################
 
 ProfileReadyDirective = () ->
@@ -80,3 +80,23 @@ ProfileReadyDirective = () ->
     })
 
 angular.module("taigaProfile").directive("tgProfileReady", ProfileReadyDirective)
+
+
+
+####################################################
+## Weekly
+####################################################
+
+ProfileWeeklyDirective = () ->
+    base1 = {
+        scope: {},
+        bindToController: {}
+        controller: null,
+        controllerAs: "vm",
+        templateUrl: "profile/profile-favs/profile-weekly.html",
+    }
+    return _.extend({}, base1, {
+        controller: "ProfileWeekly"
+    })
+
+angular.module("taigaProfile").directive("tgProfileWeekly", ProfileWeeklyDirective)

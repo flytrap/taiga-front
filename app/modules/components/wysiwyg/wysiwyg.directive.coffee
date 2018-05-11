@@ -232,6 +232,11 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
         $scope.codeEditorVisible = false
         $scope.codeLans = []
 
+        $scope.$watch("content", (n, o) =>
+            $scope.markdown = $scope.content
+            setHtmlMedium($scope.markdown)
+        )
+
         wysiwygService.loadEmojis()
 
         wysiwygCodeHightlighterService.getLanguages().then (codeLans) ->
@@ -243,10 +248,11 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
         setHtmlMedium = (markdown) ->
             html = wysiwygService.getHTML(markdown)
             editorMedium.html(html)
-            wysiwygCodeHightlighterService.addHightlighter(mediumInstance.elements[0])
+            if mediumInstance
+                wysiwygCodeHightlighterService.addHightlighter(mediumInstance.elements[0])
 
-            if $scope.editMode
-                refreshCodeBlocks(mediumInstance)
+                if $scope.editMode
+                    refreshCodeBlocks(mediumInstance)
 
         $scope.saveSnippet = (lan, code) ->
             $scope.codeEditorVisible = false
@@ -287,7 +293,8 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
                 setHtmlMedium($scope.markdown)
 
             $scope.mode = mode
-            mediumInstance.trigger('editableBlur', {}, editorMedium[0])
+            if mediumInstance
+                mediumInstance.trigger('editableBlur', {}, editorMedium[0])
 
         $scope.save = (e) ->
             if attachmentsService.replaceing
@@ -575,7 +582,7 @@ Medium = ($translate, $confirm, $storage, wysiwygService, animationFrame, tgLoad
                 if !mediumInstance && isDraft()
                     setEditMode(true)
 
-                if ($scope.markdown.length || content.length) && $scope.markdown == content
+                if $scope.markdown && ($scope.markdown.length || content.length) && $scope.markdown == content
                     return
 
                 content = getCurrentContent()
